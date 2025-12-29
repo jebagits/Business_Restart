@@ -1,0 +1,179 @@
+name: KRM GlassFish Service Control
+ 
+on:
+  workflow_dispatch:
+ 
+jobs:
+  # ===========================
+  # START STAGE (ADMIN → ALARM → IOB → KCE → KRM)
+  # ===========================
+ 
+  admin_start:
+    name: START - ADMIN
+    runs-on: [self-hosted, KRM_DRAP22]
+    steps:
+      - name: Start ADMIN
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE ADMIN START
+ 
+  alarm_start:
+    name: START - ALARM
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: admin_start
+    steps:
+      - name: Start ALARM
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE ALARM START
+ 
+  iob_start:
+    name: START - IOB
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: alarm_start
+    steps:
+      - name: Start IOB
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE IOB START
+ 
+  kce_start:
+    name: START - KCE
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: iob_start
+    steps:
+      - name: Start KCE
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE KCE START
+ 
+  krm_start:
+    name: START - KRM
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: kce_start
+    steps:
+      - name: Start KRM
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE KRM START
+ 
+  # ===========================
+  # STOP STAGE (KRM → KCE → IOB → ALARM → ADMIN)
+  # ===========================
+ 
+  krm_stop:
+    name: STOP - KRM
+    runs-on: [self-hosted, KRM_DRAP22]
+    steps:
+      - name: Stop KRM
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE KRM STOP
+ 
+  kce_stop:
+    name: STOP - KCE
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: krm_stop
+    steps:
+      - name: Stop KCE
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE KCE STOP
+ 
+  iob_stop:
+    name: STOP - IOB
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: kce_stop
+    steps:
+      - name: Stop IOB
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE IOB STOP
+ 
+  alarm_stop:
+    name: STOP - ALARM
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: iob_stop
+    steps:
+      - name: Stop ALARM
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE ALARM STOP
+ 
+  admin_stop:
+    name: STOP - ADMIN
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: alarm_stop
+    steps:
+      - name: Stop ADMIN
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE ADMIN STOP
+ 
+  # ===========================
+  # RESTART STAGE (KRM → KCE → IOB → ALARM → ADMIN)
+  # ===========================
+ 
+  krm_restart:
+    name: RESTART - KRM
+    runs-on: [self-hosted, KRM_DRAP22]
+    steps:
+      - name: Restart KRM
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE KRM RESTART
+ 
+  kce_restart:
+    name: RESTART - KCE
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: krm_restart
+    steps:
+      - name: Restart KCE
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE KCE RESTART
+ 
+  iob_restart:
+    name: RESTART - IOB
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: kce_restart
+    steps:
+      - name: Restart IOB
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE IOB RESTART
+ 
+  alarm_restart:
+    name: RESTART - ALARM
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: iob_restart
+    steps:
+      - name: Restart ALARM
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE ALARM RESTART
+ 
+  admin_restart:
+    name: RESTART - ADMIN
+    runs-on: [self-hosted, KRM_DRAP22]
+    needs: alarm_restart
+    steps:
+      - name: Restart ADMIN
+        shell: cmd
+        run: |
+          cd /d f:\krm\krm-setup\scripts
+          deploy_glassfish_apps.sh UPDATE_STATE ADMIN RESTART
